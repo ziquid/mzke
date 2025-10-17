@@ -1,40 +1,30 @@
-# mzke
+# mzke (ZDS make tool)
 
 A build tool framework with modular includes and a command-line interface.
 
 ## Two Components
 
-### 1. mzke-includes (Framework)
-The include files that projects use as a Git submodule:
+### 1. Optional but recommended: mzke-includes (build and installation framework)
+
+This is a set of include files that projects use, included as a Git submodule:
 
 ```bash
 # In your project
-git submodule add <mzke-includes-url> mzke-includes
-echo "include mzke-includes/Mzkefile" > Mzkefile
+git submodule add <mzke-includes-url> mk
 ```
 
-### 2. mzke (Tool)
+It is controlled by a *<dirname>.inc.mk* file in your project root, see `mzke.inc.mk` for an example.
+
+### 2. mzke (this tool)
+
 The command-line tool that you install once:
 
 ```bash
 # Install the tool
 git clone <mzke-url>
 cd mzke
-sudo ./install.sh
+./mzke install # first time use needs ./
 
 # Now you can use it anywhere
 mzke && mzke install
 ```
-
-## Usage
-
-1. Add mzke-includes as a submodule to your project
-2. Create a minimal Mzkefile that includes the framework
-3. Install the mzke tool once system-wide
-4. Run `mzke && mzke install` in any project using the framework
-
-## Structure
-
-- `bin/mzke` - The command-line tool
-- `install.sh` - Installation script
-- `mzke-includes/` - The framework submodule (separate repo)

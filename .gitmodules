@@ -1,0 +1,3 @@
+[submodule "mk"]
+	path = mk
+	url = git@gitea:internal-tools/mzke-includes.git
