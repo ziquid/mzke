@@ -1,0 +1,24 @@
+# Mzkefile for mzke tool installation
+
+.PHONY: all install help
+
+all:
+	@echo "Use 'mzke install' to install the mzke tool to /usr/local/bin"
+
+install:
+	@echo "Installing mzke tool to /usr/local/bin..."
+	@if [ ! -w /usr/local/bin ]; then \
+		echo "Error: Need sudo access to install to /usr/local/bin"; \
+		echo "Please run: sudo mzke install"; \
+		exit 1; \
+	fi
+	@cp bin/mzke /usr/local/bin/mzke
+	@chmod +x /usr/local/bin/mzke
+	@echo "mzke tool installed successfully to /usr/local/bin/mzke"
+
+help:
+	@echo "mzke tool repository"
+	@echo ""
+	@echo "Targets:"
+	@echo "  install  - Install mzke tool to /usr/local/bin"
+	@echo "  help     - Show this help message"
