@@ -1,5 +1,14 @@
-# .env support
+# env.inc.mk
+
+# Includes variables set in project's `.env` file as Makefile vars.
+
+# Sets these defaults
+# can/should be overriden in .env
 ENV := local
+
+# NB: don't override FEATURES in .env file, add features per env by setting ENV_FEATURES instead, e.g.:
+# (in .env:) ENV_FEATURES=certs # include certs for this env only
+###
 
 ifneq (,$(wildcard ./.env))
   include ./.env

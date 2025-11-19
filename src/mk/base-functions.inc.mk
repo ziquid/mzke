@@ -1,4 +1,7 @@
-# base functions
+# base-functions.inc.mk
+
+# Functions used by mk-includes.  Currently only the include function itself.
+###
 
 # F_INCLUDE_FILES -- include the relevant file(s)
 F_INCLUDE_FILES = \
@@ -17,24 +20,3 @@ F_INCLUDE_FILES = \
       $(eval include  $(f_new).inc.mk) \
     ) \
   )
-
-# F_INCLUDE_FILES = \
-#   $(foreach f,$(strip $1), \
-#     $(call debug,will attempt to include mk/$f.inc.mk) \
-#     $(if $(filter -%,$f), \
-#       $(eval -include mk/$(patsubst -%,%,$f).inc.mk), \
-#       $(eval include  mk/$f.inc.mk) \
-#     ) \
-#   )
-
-
-# F_INCLUDE_FILES = \
-#   $(foreach f,$(subst $(SPACE_SUBST), ,$1), \
-#     $(call debug,will attempt to include mk/$f.inc.mk) \
-#     $(if $(filter -%,$f), \
-#       $(eval -include mk/$(patsubst -%,%,$f).inc.mk), \
-#       $(eval include  mk/$f.inc.mk) \
-#     ) \
-#   )
-
-# IS_ABSOLUTE_UNIX = $(filter /%,$1)

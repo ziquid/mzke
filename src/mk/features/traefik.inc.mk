@@ -1,4 +1,7 @@
 # feature/traefik.inc.mk
+
+# Support for Traefik fronting a docker web service container
+###
 FEATURE_TRAEFIK := Y
 
 # Is this the actual traefik app?

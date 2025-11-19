@@ -1,12 +1,10 @@
-# feature/local-install.inc.mk - Install files to specified directories with permissions
-#
-# Usage:
-# Include this file in your Makefile to add local installation capabilities.
-# Define LOCAL_INSTALL_ENTRIES to specify files to install.
-#
-# Format:
-# LOCAL_INSTALL_ENTRIES := source_pattern:destination_directory:permissions
-#
+# feature/local-install.inc.mk
+
+# Install files to specified directories with permissions
+
+# Define LOCAL_INSTALL_ENTRIES to specify files to install, e.g.:
+# LOCAL_INSTALL_ENTRIES := source_pattern:destination_directory:permissions [...]
+###
 # Examples:
 # LOCAL_INSTALL_ENTRIES := \
 #   src/bin/*:/usr/local/bin:0755 \
@@ -35,7 +33,7 @@ define process-install-entry
 
 	@if [ ! -d "$(DEST_DIR)" ]; then \
 		echo "  Creating directory $(DEST_DIR)"; \
-		mkdir -p "$(DEST_DIR)" 2>/dev/null || echo "  - Warning: Failed to create directory $(DEST_DIR)"; \
+		mkdir -p "$(DEST_DIR)" 2>/dev/null || echo "- Warning: Failed to create directory $(DEST_DIR)"; \
 	fi
 
 	@for file in $(SOURCE_PATTERN); do \
@@ -43,10 +41,10 @@ define process-install-entry
 			filename=$$(basename "$$file"); \
 			dest_path="$(DEST_DIR)/$$filename"; \
 			echo "  Installing $$file to $$dest_path with permissions $(PERMISSIONS)"; \
-			cp -fa "$$file" "$$dest_path" 2>/dev/null || echo "  - Warning: Failed to copy $$file to $$dest_path"; \
-			chmod "$(PERMISSIONS)" "$$dest_path" 2>/dev/null || echo "  - Warning: Failed to set permissions $(PERMISSIONS) on $$dest_path"; \
+			cp -fa "$$file" "$$dest_path" 2>/dev/null || echo "- Warning: Failed to copy $$file to $$dest_path"; \
+			chmod "$(PERMISSIONS)" "$$dest_path" 2>/dev/null || echo "- Warning: Failed to set permissions $(PERMISSIONS) on $$dest_path"; \
 		else \
-			echo "  - Warning: Source file $$file not found"; \
+			echo "- Warning: Source file $$file not found"; \
 		fi; \
 	done
 endef
@@ -65,7 +63,7 @@ define show-install-entry
 			dest_path="$(DEST_DIR)/$$filename"; \
 			echo "  Would install $$file to $$dest_path with permissions $(PERMISSIONS)"; \
 		else \
-			echo "  Warning: Source file $$file not found"; \
+			echo "- Warning: Source file $$file not found"; \
 		fi; \
 	done
 endef

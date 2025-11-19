@@ -1,4 +1,7 @@
 # features/drupal.inc.mk
+
+# Drupal support, including passthrough drush and composer commands.
+###
 FEATURE_DRUPAL := Y
 
 # Set composer and drush commands

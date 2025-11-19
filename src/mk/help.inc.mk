@@ -1,5 +1,8 @@
 # help.inc.mk
 
+# Shows all documented targets from all included Makefiles.
+###
+
 ifdef IS_LINUX
   ANSI_ECHO := echo -e
 else
@@ -42,3 +45,10 @@ show-var-%: ## Show the value of a make variable.  Usage: make show-var-VARIABLE
 
 show-val-%: ## Show ONLY the value of a make variable.  Usage: make -s show-val-VARIABLE
 	$(info $(strip $($*)))
+
+.PHONY: describe-features
+describe-features: ## briefly describe the different feature files
+	for a in mk/*.inc.mk mk/features/*.inc.mk; do \
+	  grep -B10 \#\#\# $$a || head -n 10 $$a; \
+	  echo ; echo --- ; \
+	done

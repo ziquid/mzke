@@ -1,5 +1,8 @@
 # features.inc.mk
 
+# Includes the necessary files for feature support.
+###
+
 # Loop over FEATURES
 $(foreach f,$(FEATURES), \
   $(eval FEATURES_INCLUDES += features/$f) \

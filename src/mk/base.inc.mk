@@ -1,6 +1,8 @@
-# base include
+# base.inc.mk
 
-# include GMSL, base functions and variables
+# The file that starts all of ZDS Mzke mk-includes.
+# Includes GMSL, base functions, and variables
+###
 include ~/Documents/Tools/gmsl/gmsl
 
 define SILENT_STATEMENTS

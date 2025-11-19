@@ -1,4 +1,7 @@
-# base variables
+# base-vars.inc.mk
+
+# A [plethora](https://youtu.be/fQKbbFeaWJM) of variables used in our plethora of include files.
+###
 
 SPACE_SUBST := ::space::
 SPACE_QUOTED := : :
@@ -7,11 +10,11 @@ CURDIR_SPACE_REPLACED := $(subst $(SPACE),$(SPACE_SUBST),$(CURDIR))
 CURDIR_NAME := $(lastword $(subst /, ,$(CURDIR)))
 
 HOST_OS := $(shell uname)
-# $(info HOST_OS is $(HOST_OS))
 
 MAKE_USER_COMMAND ?= $(notdir $(MAKE))
 RUN_MAKE := $(MAKE) -f $(firstword $(MAKEFILE_LIST))
 MAKEVARS = $(shell echo '$(.VARIABLES)' | tr \  \\n | grep -i m.ke)
+ALLVARS = $(shell echo '$(.VARIABLES)' | tr \  \\n)
 
 # $(info ARGS is $(ARGS), MAKECMDGOALS is $(MAKECMDGOALS))
 $(MAKECMDGOALS)_ARGS := $(ARGS)

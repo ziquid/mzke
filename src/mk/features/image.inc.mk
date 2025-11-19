@@ -1,4 +1,7 @@
 # feature/image.inc.mk
+
+# Supports building a Docker image (and optionally pushing it to a container registry)
+###
 FEATURE_IMAGE := Y
 
 DOCKERFILE ?= Dockerfile

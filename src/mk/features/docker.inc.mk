@@ -1,4 +1,7 @@
 # feature/docker.inc.mk
+
+# Enables support for building and managing Docker images
+###
 FEATURE_DOCKER := Y
 
 ifeq ($(HOST_OS),Darwin)
