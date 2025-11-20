@@ -8,7 +8,7 @@ DOCKERFILE ?= Dockerfile
 
 # Set progress format to rawjson for AI agent contexts
 ifneq ($(or $(CLAUDE_CODE_ENTRYPOINT),$(ZDS_AI_AGENT_BOT_NAME)),)
-  PROGRESS := --progress rawjson
+  PROGRESS := --progress plain
 endif
 
 .PHONY: bpa build
