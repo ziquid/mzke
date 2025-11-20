@@ -1,4 +1,4 @@
-# feature/local-install.inc.mk
+# features/local-install.inc.mk
 
 # Install files to specified directories with permissions
 

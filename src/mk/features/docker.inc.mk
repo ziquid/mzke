@@ -1,8 +1,10 @@
-# feature/docker.inc.mk
+# features/docker.inc.mk
 
 # Enables support for building and managing Docker images
 ###
 FEATURE_DOCKER := Y
+
+CONTAINER_SHELL ?= /bin/bash
 
 ifeq ($(HOST_OS),Darwin)
 DOCKER_DAEMON := com.[d]ocker.backend
@@ -15,6 +17,8 @@ endif
 DOCKER_RUNNING := $(shell ps ax | grep -qs $(DOCKER_DAEMON) && echo Y || echo N)
 $(call debug2,DOCKER_RUNNING is $(DOCKER_RUNNING))
 
+DOCKER_INTERACTIVE := $(shell tty -s && echo "-i")
+
 .PHONY: ddr dds start-docker
 ddr dds start-docker: ## Start (Run) the docker daemon, if not already started (Currently running: $(DOCKER_RUNNING))
 ifeq ($(DOCKER_RUNNING)-$(HOST_OS),N-Darwin)
@@ -26,6 +30,10 @@ ifeq ($(DOCKER_RUNNING),N)
 	$(error Please start Docker and try again)
 endif
 endif # N-Darwin
+
+.PHONY: docker
+docker: ## Generic 'docker' wrapper
+	docker $($@_ARGS)
 
 .PHONY: down
 down: ## Stop the docker containers, remove networks
@@ -65,10 +73,20 @@ run-fg: ddr stop $$(CERTS_TARGET) ## Run the docker containers in the foreground
 	docker compose up $($@_ARGS)
 
 .PHONY: ssh
-ssh: run ## SSH into the $(CONTAINER_NAME) container
-	docker exec -t -i $(CONTAINER_NAME) /bin/bash
-# @FIXME: Support images that don't have bash
-#	docker exec -t -i $(CONTAINER_NAME) /bin/sh
+ssh: run ## SSH into (exec a shell in) the $(CONTAINER_NAME) container
+	docker exec -t $(DOCKER_INTERACTIVE) $(CONTAINER_NAME) $(CONTAINER_SHELL)
+
+.PHONY: bash
+bash: run ## exec bash in the $(CONTAINER_NAME) container
+	docker exec -t $(DOCKER_INTERACTIVE) $(CONTAINER_NAME) bash
+
+.PHONY: sh shell
+sh shell: run ## exec /bin/sh in the $(CONTAINER_NAME) container
+	docker exec -t $(DOCKER_INTERACTIVE) $(CONTAINER_NAME) sh
+
+.PHONY: zsh
+zsh: run ## exec zsh in the $(CONTAINER_NAME) container
+	docker exec -t $(DOCKER_INTERACTIVE) $(CONTAINER_NAME) zsh
 
 .PHONY: status st ls
 status st ls: ## Show (all) container status

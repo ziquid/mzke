@@ -1,10 +1,15 @@
-# feature/image.inc.mk
+# features/image.inc.mk
 
 # Supports building a Docker image (and optionally pushing it to a container registry)
 ###
 FEATURE_IMAGE := Y
 
 DOCKERFILE ?= Dockerfile
+
+# Set progress format to rawjson for AI agent contexts
+ifneq ($(or $(CLAUDE_CODE_ENTRYPOINT),$(ZDS_AI_AGENT_BOT_NAME)),)
+  PROGRESS := --progress rawjson
+endif
 
 .PHONY: bpa build
 bpa build: $(DOCKERFILE) ddr ## Build and Push All custom Docker image(s) built by this app
@@ -16,4 +21,4 @@ else
 	$(info Cowardly refusing to push a non-prod branch to container registry)
 endif
 	docker buildx use mybuilder
-	docker buildx build -f $(DOCKERFILE) $(IMAGE_BUILD_PLATFORMS) $(IMAGE_BUILD_PUSH) -t $(IMAGE) .
+	docker buildx build -f $(DOCKERFILE) $(PROGRESS) $(IMAGE_BUILD_PLATFORMS) $(IMAGE_BUILD_PUSH) -t $(IMAGE) $($@_ARGS) .

@@ -1,4 +1,4 @@
-# feature/certs.inc.mk
+# features/certs.inc.mk
 
 # Enables `mkcert` SSL (TLS) certs, usually for local/dev envs
 # Not necessary for production certs, such as Let's Encrypt.

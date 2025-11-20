@@ -1,4 +1,4 @@
-# feature/traefik.inc.mk
+# features/traefik.inc.mk
 
 # Support for Traefik fronting a docker web service container
 ###
