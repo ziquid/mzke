@@ -10,7 +10,7 @@
 APP := $(lastword $(subst /, ,$(CURDIR)))
 
 # Default container name, defaults to app name
-CONTAINER_NAME := $(APP)
+export CONTAINER_NAME := $(APP)
 
 # Docker Image needed for this app?  Specify which here.
 IMAGE :=
