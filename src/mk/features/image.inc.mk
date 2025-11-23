@@ -11,8 +11,13 @@ ifneq ($(or $(CLAUDE_CODE_ENTRYPOINT),$(ZDS_AI_AGENT_BOT_NAME)),)
   PROGRESS := --progress plain
 endif
 
+# Support for build arguments
+ifneq ($(BUILD_ARGS),)
+  BUILD_ARGS_FLAGS := $(foreach arg,$(BUILD_ARGS),--build-arg $(arg) )
+endif
+
 .PHONY: bpa build
-bpa build: $(DOCKERFILE) ddr ## Build and Push All custom Docker image(s) built by this app
+bpa build: $(IMAGE_BUILD_DEPS) $(DOCKERFILE) ddr ## Build and Push All custom Docker image(s) built by this app
 ifeq ($(IS_PROD),Y)
 	$(eval IMAGE_BUILD_PUSH := --push)
 	$(eval IMAGE_BUILD_PLATFORMS := --platform linux/amd64,linux/arm64)
@@ -21,4 +26,4 @@ else
 	$(info Cowardly refusing to push a non-prod branch to container registry)
 endif
 	docker buildx use mybuilder
-	docker buildx build -f $(DOCKERFILE) $(PROGRESS) $(IMAGE_BUILD_PLATFORMS) $(IMAGE_BUILD_PUSH) -t $(IMAGE) $($@_ARGS) .
+	docker buildx build -f $(DOCKERFILE) $(PROGRESS) $(IMAGE_BUILD_PLATFORMS) $(IMAGE_BUILD_PUSH) $(BUILD_ARGS_FLAGS) -t $(IMAGE) $($@_ARGS) .
