@@ -31,17 +31,29 @@ ifeq ($(DOCKER_RUNNING),N)
 endif
 endif # N-Darwin
 
-.PHONY: docker
-docker: ## Generic 'docker' wrapper
+.PHONY: docker d
+docker d: ## Generic 'docker' wrapper
 	docker $($@_ARGS)
+
+.PHONY: docker-compose dc
+docker-compose dc: ## Generic 'docker compose' wrapper
+	docker compose $($@_ARGS)
+
+.PHONY: dc-exec dce
+dc-exec dce: ## docker compose exec, first arg should be service name
+	docker compose exec $($@_ARGS)
+
+.PHONY: dceu
+dceu: ## examine current state of affairs inside DCEU
+	$(info still lagging behind MCU, sadly)
+
+.PHONY: d-exec de exec
+d-exec de exec: ## docker exec inside the $(CONTAINER_NAME) container
+	docker exec $(CONTAINER_NAME) $($@_ARGS)
 
 .PHONY: down
 down: ## Stop the docker containers, remove networks
 	docker compose down $($@_ARGS)
-
-.PHONY: exec
-exec: # run ## exec something in a service
-	docker compose exec $($@_ARGS)
 
 .PHONY: logs
 logs: ddr docker-compose.yml ## Show container logs for the $(CONTAINER_NAME) container
@@ -74,19 +86,19 @@ run-fg: ddr stop $$(CERTS_TARGET) ## Run the docker containers in the foreground
 
 .PHONY: ssh
 ssh: run ## SSH into (exec a shell in) the $(CONTAINER_NAME) container
-	docker exec -t $(DOCKER_INTERACTIVE) $(CONTAINER_NAME) $(CONTAINER_SHELL)
+	docker exec -t $(DOCKER_INTERACTIVE) $(CONTAINER_NAME) $(CONTAINER_SHELL) $($@_ARGS)
 
 .PHONY: bash
 bash: run ## exec bash in the $(CONTAINER_NAME) container
-	docker exec -t $(DOCKER_INTERACTIVE) $(CONTAINER_NAME) bash
+	docker exec -t $(DOCKER_INTERACTIVE) $(CONTAINER_NAME) bash $($@_ARGS)
 
 .PHONY: sh shell
 sh shell: run ## exec /bin/sh in the $(CONTAINER_NAME) container
-	docker exec -t $(DOCKER_INTERACTIVE) $(CONTAINER_NAME) sh
+	docker exec -t $(DOCKER_INTERACTIVE) $(CONTAINER_NAME) sh $($@_ARGS)
 
 .PHONY: zsh
 zsh: run ## exec zsh in the $(CONTAINER_NAME) container
-	docker exec -t $(DOCKER_INTERACTIVE) $(CONTAINER_NAME) zsh
+	docker exec -t $(DOCKER_INTERACTIVE) $(CONTAINER_NAME) zsh $($@_ARGS)
 
 .PHONY: status st ls
 status st ls: ## Show (all) container status
