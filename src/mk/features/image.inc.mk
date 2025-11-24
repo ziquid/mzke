@@ -13,7 +13,7 @@ endif
 
 # Support for build arguments
 ifneq ($(BUILD_ARGS),)
-  BUILD_ARGS_FLAGS := $(foreach arg,$(BUILD_ARGS),--build-arg $(arg) )
+  BUILD_ARGS_FLAGS = $(foreach arg,$(BUILD_ARGS),--build-arg $(arg) )
 endif
 
 .PHONY: bpa build
