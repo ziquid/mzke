@@ -4,8 +4,7 @@
 ###
 
 required-arg--%: ## target that requires an argument for another target, e.g. required-arg--<target-name>--<message-if-missing>
-	$(eval ARGS := $(call split,--,$*))
-	$(eval FUNCTION := $(word 1,$(ARGS)))
-	$(eval MESSAGE := $(subst -, ,$(word 2,$(ARGS))))
-	$(info variable $(FUNCTION)_ARGS is $($(FUNCTION)_ARGS))
-	$(if $($(FUNCTION)_ARGS),,$(error Missing parameter for $(FUNCTION): $(MESSAGE)))
+	$(eval ARG := $(call split,--,$*))
+	$(eval FUNC := $(word 1,$(ARG)))
+	$(eval MSG := $(subst -, ,$(word 2,$(ARG))))
+	$(if $($(FUNC)_ARGS),,$(error Missing parameter for $(FUNC): $(MSG)))
