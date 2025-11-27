@@ -40,7 +40,7 @@ define process-install-entry
 		if [ -f "$$file" ]; then \
 			filename=$$(basename "$$file"); \
 			dest_path="$(DEST_DIR)/$$filename"; \
-			echo "  Installing $$file to $$dest_path with permissions $(PERMISSIONS)"; \
+			echo "  . $$file"; \
 			cp -fa "$$file" "$$dest_path" 2>/dev/null || echo "- Warning: Failed to copy $$file to $$dest_path"; \
 			chmod "$(PERMISSIONS)" "$$dest_path" 2>/dev/null || echo "- Warning: Failed to set permissions $(PERMISSIONS) on $$dest_path"; \
 		else \
