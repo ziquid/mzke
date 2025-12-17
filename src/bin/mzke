@@ -78,7 +78,12 @@ VARS="IS_MZKE=YES MAKE_USER_COMMAND=mzke"
 ARGS=
 
 if [ $# -gt 0 ]; then
-  ARGS_QUOTED=ARGS=\""$@"\"
+  # Use printf to properly quote each argument
+  quoted_args=""
+  for arg in "$@"; do
+    quoted_args="${quoted_args} $(printf %q "$arg")"
+  done
+  ARGS_QUOTED="ARGS=\"${quoted_args# }\""  # Remove leading space
   ARGS=ARGS="$@"
 fi
 
