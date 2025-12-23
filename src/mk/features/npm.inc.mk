@@ -9,8 +9,8 @@ FEATURE_NPM := Y
 install i: ## Install npm dependencies
 	npm install $($@_ARGS)
 
-.PHONY: pack p
-pack p: ## Create a tarball from the package
+.PHONY: package pack p
+package pack p: ## Create a tarball from the package
 	npm pack $($@_ARGS)
 
 .PHONY: publish pub
