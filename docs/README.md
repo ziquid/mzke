@@ -4,7 +4,7 @@ A build tool framework with modular includes and a command-line interface.
 
 ## Requirements
 
-- [GMSL](https://github.com/jgrahamc/gmsl/) (GNU Make Standard Library) is included as a submodule at `src/mk/vendor/gmsl` and installed automatically with `mzke install`
+- Requires [GMSL](https://github.com/jgrahamc/gmsl/) installed inside dir `~/Documents/Tools/gmsl`
 
 ## Installation
 
