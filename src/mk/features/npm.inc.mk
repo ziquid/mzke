@@ -9,6 +9,10 @@ FEATURE_NPM := Y
 install i: ## Install npm dependencies
 	npm install $($@_ARGS)
 
+.PHONY: install-global ig
+install-global ig: ## Install npm package globally
+	npm install -g $($@_ARGS)
+
 .PHONY: package pack p
 package pack p: ## Create a tarball from the package
 	npm pack $($@_ARGS)

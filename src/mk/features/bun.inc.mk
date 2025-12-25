@@ -9,6 +9,10 @@ FEATURE_BUN := Y
 install i: ## Install bun dependencies
 	bun install $($@_ARGS)
 
+.PHONY: install-global ig
+install-global ig: ## Install bun package globally
+	bun install -g $($@_ARGS)
+
 .PHONY: package pack p
 package pack p: ## Create a tarball from the package
 	bun pm pack $($@_ARGS)
