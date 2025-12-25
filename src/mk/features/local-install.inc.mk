@@ -68,9 +68,17 @@ define show-install-entry
 	done
 endef
 
+# Initialize git submodules if in a git repo
+.PHONY: submodule-init
+submodule-init: ## Initialize git submodules
+	@if [ -f .gitmodules ]; then \
+		echo "Initializing git submodules..."; \
+		git submodule update --init --recursive 2>/dev/null || true; \
+	fi
+
 # Main installation target
 .PHONY: local-install
-local-install: ## Install files to local filesystem according to LOCAL_INSTALL_ENTRIES
+local-install: submodule-init ## Install files to local filesystem according to LOCAL_INSTALL_ENTRIES
 	@echo "Installing files to local filesystem..."
 ifeq ($(LOCAL_INSTALL_ENTRIES),)
 	@echo "No installation entries defined. Define LOCAL_INSTALL_ENTRIES in your Makefile."
