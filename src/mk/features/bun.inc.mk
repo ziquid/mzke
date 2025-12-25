@@ -17,12 +17,16 @@ package pack p: ## Create a tarball from the package
 publish pub: ## Publish package to registry
 	bun publish $($@_ARGS)
 
-.PHONY: run start
-run start: ## Run 'bun start' with optional arguments
+.PHONY: run r
+run r: ## Run a bun script
+	bun run $($@_ARGS)
+
+.PHONY: start st s
+start st s: ## Run 'bun start' with optional arguments
 	bun start $($@_ARGS)
 
-.PHONY: run-dev start-dev rd sd
-run-dev start-dev rd sd: ## Run 'bun run dev' for development mode
+.PHONY: run-dev rd
+run-dev rd: ## Run 'bun run dev' for development mode
 	bun run dev $($@_ARGS)
 
 .PHONY: build b
