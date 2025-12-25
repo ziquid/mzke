@@ -3,7 +3,7 @@
 # The file that starts all of ZDS Mzke mk-includes.
 # Includes GMSL, base functions, targets, and variables
 ###
-include ~/Documents/Tools/gmsl/gmsl
+include mk/vendor/gmsl/gmsl
 
 define SILENT_STATEMENTS
 DEBUG := 0

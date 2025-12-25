@@ -1,0 +1,3 @@
+[submodule "src/mk/vendor/gmsl"]
+	path = src/mk/vendor/gmsl
+	url = https://github.com/jgrahamc/gmsl.git
