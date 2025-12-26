@@ -1,5 +1,8 @@
 #!/usr/bin/env mzke -f
 
+# Initialize git submodules at parse time (before include)
+$(shell git submodule update --init --recursive 2>/dev/null || true)
+
 include src/mk/base.inc.mk
 
 MZKE_INCLUDES := defaults $(CURDIR_SPACE_REPLACED)/$(CURDIR_NAME) all env features help
