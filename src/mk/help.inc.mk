@@ -63,7 +63,13 @@ show-val-%: ## Show ONLY the value of a make variable.  Usage: make -s show-val-
 
 .PHONY: describe-features
 describe-features: ## briefly describe the different feature files
-	for a in mk/*.inc.mk mk/features/*.inc.mk; do \
+	@for a in mk/features/*.inc.mk; do \
 	  grep -B10 \#\#\# $$a || head -n 10 $$a; \
-	  echo ; echo --- ; \
+	  echo ; : echo --- ; \
 	done
+
+.PHONY: list-features
+list-features: ## briefly list the different feature files
+	@for a in mk/features/*.inc.mk; do \
+	  printf '%s ' $$(basename $$a .inc.mk) ; \
+	done ; echo
