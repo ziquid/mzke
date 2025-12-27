@@ -36,7 +36,7 @@ package pack p: build ## Create the $(BUN_PACKAGE_TARBALL) package.  Implies bui
 
 .PHONY: package-install-global pig
 package-install-global pig: package ## Install the $(BUN_PACKAGE_NAME_VERSION) package globally.  Implies package.
-	bun install -g $(shell pwd -P)/$(BUN_PACKAGE_TARBALL)
+	bun install -g "$(shell pwd -P)/$(BUN_PACKAGE_TARBALL)"
 
 .PHONY: publish pub
 publish pub: ## Publish the $(BUN_PACKAGE_NAME_VERSION) package to registry
