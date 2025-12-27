@@ -17,6 +17,9 @@ endif
 DOCKER_RUNNING := $(shell ps ax | grep -qs $(DOCKER_DAEMON) && echo Y || echo N)
 $(call debug2,DOCKER_RUNNING is $(DOCKER_RUNNING))
 
+DOCKER_CONTAINERS_RUNNING := $(shell docker compose ps --services --filter "status=running" 2>/dev/null | grep -q . && echo Y || echo N)
+$(call debug2,DOCKER_CONTAINERS_RUNNING is $(DOCKER_CONTAINERS_RUNNING))
+
 DOCKER_INTERACTIVE := $(shell tty -s && echo "-i")
 
 .PHONY: ddr dds start-docker
@@ -73,11 +76,12 @@ rb rebuild: docker-compose.yml $$(CERTS_TARGET) ## Recreate and restart the dock
 rerun restart rr: docker-compose.yml $$(CERTS_TARGET) ## (Re)start the docker containers
 	docker compose restart $($@_ARGS)
 
-# @FIXME: This seems to restart sometimes, even if already running.  Not sure why.
 .PHONY: run start up
 .SECONDEXPANSION:
 run start up: ddr docker-compose.yml $$(CERTS_TARGET) ## Run the docker containers, if already stopped.  Don't restart if running.
-	docker compose up -d $($@_ARGS)
+ifeq ($(DOCKER_CONTAINERS_RUNNING),N)
+	@docker compose up -d $($@_ARGS)
+endif
 
 .PHONY: run-fg
 .SECONDEXPANSION:
