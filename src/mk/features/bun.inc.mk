@@ -38,6 +38,10 @@ package pack p: build ## Create the $(BUN_PACKAGE_TARBALL) package.  Implies bui
 package-install-global pig: package ## Install the $(BUN_PACKAGE_NAME_VERSION) package globally.  Implies package.
 	bun install -g "$(shell pwd -P)/$(BUN_PACKAGE_TARBALL)"
 
+.PHONY: package-remove-global prg
+package-remove-global prg: ## Remove all globally-installed $(BUN_PACKAGE_NAME_STRIPPED) packages.
+	bun remove -g "$(BUN_PACKAGE_NAME)"
+
 .PHONY: publish pub
 publish pub: ## Publish the $(BUN_PACKAGE_NAME_VERSION) package to registry
 	bun publish $($@_ARGS)
