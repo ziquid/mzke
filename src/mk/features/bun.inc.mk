@@ -42,6 +42,12 @@ package-install-global pig: package ## Install the $(BUN_PACKAGE_NAME_VERSION) p
 package-remove-global prg: ## Remove all globally-installed $(BUN_PACKAGE_NAME_STRIPPED) packages.
 	bun remove -g "$(BUN_PACKAGE_NAME)"
 
+.PHONY: prig
+prig: ## Remove all globally-installed $(BUN_PACKAGE_NAME_STRIPPED) packages, then install $(BUN_PACKAGE_NAME_VERSION).
+	bun pm pack $($@_ARGS)
+	bun remove -g "$(BUN_PACKAGE_NAME)"
+	bun install -g "$(shell pwd -P)/$(BUN_PACKAGE_TARBALL)"
+
 .PHONY: publish pub
 publish pub: ## Publish the $(BUN_PACKAGE_NAME_VERSION) package to registry
 	bun publish $($@_ARGS)
