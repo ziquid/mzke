@@ -72,7 +72,7 @@ fi
 # Rule 1: if no makefile and target is "prep", use Makefile
 # Makefile.song.common
 
-if [ "$TARGET" == prep && -z "$MAKEFILE" ]; then
+if [ "$TARGET" == prep -a -z "$MAKEFILE" ]; then
   MAKEFILE=/usr/local/share/muziq/Makefile.song.common
 fi
 
