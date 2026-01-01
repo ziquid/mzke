@@ -25,13 +25,12 @@ function _mzke_find_mzkefile() {
   echo $MAKEFILE
 }
 
-SUBDIR=
-
-# order of M.kefile priority:
-# 1. specified with -f
-# 2. ./Mzkefile
-# 3. ./Makefile
-# 4. any Mzkefile in parent, up to 3 levels below root (e.g., /usr/local/etc/Mzkefile is ok but /usr/local/Mzkefile isn't)
+# Process -C flag first, before any file searching
+if [ "$1" == -C ]; then
+  cd "$2"
+  [ $? -ne 0 ] && echo Error: could not cd to "$2" >&2 && exit 1
+  shift 2
+fi
 
 if [ "$1" == -f ]; then
   MAKEFILE="$2"
@@ -41,45 +40,28 @@ elif [ -r Mzkefile ]; then
 elif [ -r Makefile ]; then
   MAKEFILE=Makefile
 else
+  # Search parent directories if no local M.kefile found
   MAKEFILE=$(_mzke_find_mzkefile)
-  DIRNAME=$(dirname "$MAKEFILE")
-  SUBDIR="-C \"$DIRNAME\""
-  MAKEFILE=$(basename "$MAKEFILE")
-fi
-
-if [ "$1" == -C ]; then
-  if [ -n "$SUBDIR" ]; then
-    echo "Error: MAKEFILE found in parent dir requires $SUBDIR, overriding this -C option: \"$2\"."
-    exit 1
+  if [ -n "$MAKEFILE" ]; then
+    DIRNAME=$(dirname "$MAKEFILE")
+    SUBDIR="-C $DIRNAME"
+    MAKEFILE=$(basename "$MAKEFILE")
   fi
-  SUBDIR="-C \"$2\""
-  shift 2
 fi
 
-if [ "$1" == -n ]; then
-  OPTS=-n
-  shift
-fi
-
-if [ "$1" == -s ]; then
-  OPTS=-s
-  NO_PRINT_BANNER=1
-  shift
-fi
+[ "$1" == -n ] && OPTS=-n && shift
+[ "$1" == -s ] && OPTS=-s && NO_PRINT_BANNER=1 && shift
 
 TARGET=all
 
-if [ -n "$1" ]; then
-  TARGET="$1"
-  shift
-fi
+[ -n "$1" ] && TARGET="$1" && shift
 
 VARS="IS_MZKE=YES MAKE_USER_COMMAND=mzke"
 ARGS=
 
 if [ $# -gt 0 ]; then
   # Use printf to properly quote each argument
-  quoted_args=""
+  quoted_args=
   for arg in "$@"; do
     quoted_args="${quoted_args} $(printf %q "$arg")"
   done
@@ -90,20 +72,12 @@ fi
 # Rule 1: if no makefile and target is "prep", use Makefile
 # Makefile.song.common
 
-if [ "$TARGET" == prep -a -z "$MAKEFILE" ]; then
+if [ "$TARGET" == prep && -z "$MAKEFILE" ]; then
   MAKEFILE=/usr/local/share/muziq/Makefile.song.common
 fi
 
-if [ -z "$MAKEFILE" ]; then
-  echo Fatal error: No Mzkefile found >&2
-  exit 1
-fi
+[ -z "$MAKEFILE" ] && echo Fatal error: No M.kefile found >&2 && exit 1
 
 # Execute make
 [ "$NO_PRINT_BANNER" = 1 ] || echo make -f $MAKEFILE $SUBDIR $OPTS $VARS $ARGS_QUOTED $TARGET
-eval make -f \"$MAKEFILE\" $SUBDIR $OPTS $VARS $ARGS_QUOTED $TARGET
-# if [ -z "$ARGS" ]; then
-#   make -f "$MAKEFILE" $VARS "$TARGET"
-# else
-#   make -f "$MAKEFILE" $VARS "$ARGS" "$TARGET"
-# fi
+eval make -f "$MAKEFILE" $SUBDIR $OPTS $VARS $ARGS_QUOTED $TARGET
