@@ -44,7 +44,7 @@ else
   MAKEFILE=$(_mzke_find_mzkefile)
   if [ -n "$MAKEFILE" ]; then
     DIRNAME=$(dirname "$MAKEFILE")
-    SUBDIR="-C $DIRNAME"
+    SUBDIR="-C \"$DIRNAME\""
     MAKEFILE=$(basename "$MAKEFILE")
   fi
 fi
@@ -80,4 +80,4 @@ fi
 
 # Execute make
 [ "$NO_PRINT_BANNER" = 1 ] || echo make -f $MAKEFILE $SUBDIR $OPTS $VARS $ARGS_QUOTED $TARGET
-eval make -f "$MAKEFILE" $SUBDIR $OPTS $VARS $ARGS_QUOTED $TARGET
+eval make -f \"$MAKEFILE\" $SUBDIR $OPTS $VARS $ARGS_QUOTED $TARGET
