@@ -1,7 +1,7 @@
 FEATURES := local-install
 
 # Local installation entries for mzke
-# 
+#
 # This defines what files get installed when running 'mzke install':
 # - src/bin/mzke -> /usr/local/bin/mzke (executable)
 # - src/mk/features/*.inc.mk -> /usr/local/share/mzke/mk/features (feature files)
@@ -21,3 +21,13 @@ LOCAL_INSTALL_ENTRIES := \
 
 # Default target
 ALL_TARGET := help
+
+TAR_EXCLUDE_MAC_METADATA := $(if $(IS_MAC),--no-mac-metadata,)
+
+.PHONY: package pack p tarball tar tb
+package pack p tarball tar tb: ## package this as a source tarball for installation elsewhere
+	tar cz --no-xattrs $(TAR_EXCLUDE_MAC_METADATA) --exclude-vcs -C .. --exclude $(APP).tgz -f $(APP).tgz $(APP)
+
+.PHONY: pack-and-copy
+pack-and-copy pac pc: pack ## package, copy to zds-ai project
+	cp $(APP).tgz ~/sca/zds-ai

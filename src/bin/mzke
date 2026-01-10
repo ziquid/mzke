@@ -1,6 +1,10 @@
 #!/bin/bash
 # mzke -- make for muziq
 
+MZKE_VERSION=0.1.1-20260110
+
+[[ "$1" == --version || "$1" == -v ]] && echo mzke version $MZKE_VERSION && make --version && exit 0
+
 function _mzke_find_mzkefile() {
 
   STARTDIR=$(pwd -P)
@@ -26,9 +30,9 @@ function _mzke_find_mzkefile() {
 }
 
 # Process -C flag first, before any file searching
-if [ "$1" == -C ]; then
+if [[ "$1" == -C ]]; then
   cd "$2"
-  [ $? -ne 0 ] && echo Error: could not cd to "$2" >&2 && exit 1
+  [[ $? -ne 0 ]] && echo Error: could not cd to $2 >&2 && exit 1
   shift 2
 fi
 
@@ -54,7 +58,7 @@ fi
 
 TARGET=all
 
-[ -n "$1" ] && TARGET="$1" && shift
+[[ -n "$1" ]] && TARGET="$1" && shift
 
 VARS="IS_MZKE=YES MAKE_USER_COMMAND=mzke"
 ARGS=
@@ -76,8 +80,8 @@ if [ "$TARGET" == prep -a -z "$MAKEFILE" ]; then
   MAKEFILE=/usr/local/share/muziq/Makefile.song.common
 fi
 
-[ -z "$MAKEFILE" ] && echo Fatal error: No M.kefile found >&2 && exit 1
+[[ -z "$MAKEFILE" ]] && echo Fatal error: No M.kefile found >&2 && exit 1
 
 # Execute make
-[ "$NO_PRINT_BANNER" = 1 ] || echo make -f $MAKEFILE $SUBDIR $OPTS $VARS $ARGS_QUOTED $TARGET
+[[ "$NO_PRINT_BANNER" == 1 ]] || echo make -f $MAKEFILE $SUBDIR $OPTS $VARS $ARGS_QUOTED $TARGET
 eval make -f \"$MAKEFILE\" $SUBDIR $OPTS $VARS $ARGS_QUOTED $TARGET
