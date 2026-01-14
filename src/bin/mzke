@@ -36,25 +36,27 @@ if [[ "$1" == -C ]]; then
   shift 2
 fi
 
-if [ "$1" == -f ]; then
+if [[ "$1" == -f ]]; then
   MAKEFILE="$2"
   shift 2
-elif [ -r Mzkefile ]; then
+elif [[ -r Mzkefile ]]; then
   MAKEFILE=Mzkefile
-elif [ -r Makefile ]; then
+elif [[ -r Makefile ]]; then
   MAKEFILE=Makefile
 else
   # Search parent directories if no local M.kefile found
   MAKEFILE=$(_mzke_find_mzkefile)
-  if [ -n "$MAKEFILE" ]; then
+  if [[ -n "$MAKEFILE" ]]; then
     DIRNAME=$(dirname "$MAKEFILE")
     SUBDIR="-C \"$DIRNAME\""
     MAKEFILE=$(basename "$MAKEFILE")
   fi
 fi
 
-[ "$1" == -n ] && OPTS=-n && shift
-[ "$1" == -s ] && OPTS=-s && NO_PRINT_BANNER=1 && shift
+[[ "$1" == --check-m?kefile ]] && exit $([[ -f "$MAKEFILE" ]] ; echo $?)
+
+[[ "$1" == -n ]] && OPTS="$OPTS -n" && shift
+[[ "$1" == -s ]] && OPTS="$OPTS -s" && NO_PRINT_BANNER=1 && shift
 
 TARGET=all
 
