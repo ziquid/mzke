@@ -8,7 +8,7 @@ FEATURE_TRAEFIK := Y
 IS_TRAEFIK := $(filter traefik,$(CONTAINER_NAME))
 
 # Traefik proxy directory (relative to current app)
-TRAEFIK_DIR := ../traefik-tests
+TRAEFIK_DIR := ../traefik
 
 TRAEFIK_RUNNING := $(shell docker ps -f 'name=traefik' --format '{{.Names}}' \
   | grep -qs '^traefik$$' && echo Y || echo N)
