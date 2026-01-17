@@ -22,10 +22,14 @@ LOCAL_INSTALL_ENTRIES := \
 # Default target
 ALL_TARGET := help
 
-.PHONY: pack-and-copy
-pack-and-copy pac pc: tarball ## package source, copy to zds-ai project
+.PHONY: copy
+copy: tarball ## package source, copy to zds-ai project
 	cp $(APP)-source.tgz ~/sca/zds-ai/$(APP).tgz
 
+.PHONY: pack-and-copy
+pack-and-copy pac pc: pack copy ## package, copy to $(BUN_PACKAGE_NAME_STRIPPED).tgz and zds-ai project
+	@:
+
 .PHONY: prigc
-prigc: pac prig ## build, reinstall globally, pack, and copy
+prigc: prig copy ## build, pack, reinstall globally, and copy
 	@:
