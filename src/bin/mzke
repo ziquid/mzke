@@ -1,7 +1,7 @@
 #!/bin/bash
-# mzke -- make for muziq
+# mzke -- ZDS make wrapper
 
-MZKE_VERSION=0.1.1-20260110
+MZKE_VERSION=0.1.1-20260116
 
 [[ "$1" == --version || "$1" == -v ]] && echo mzke version $MZKE_VERSION && make --version && exit 0
 
