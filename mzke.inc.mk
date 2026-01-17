@@ -1,4 +1,4 @@
-FEATURES := local-install
+FEATURES := build-noop local-install tarball
 
 # Local installation entries for mzke
 #
@@ -22,12 +22,10 @@ LOCAL_INSTALL_ENTRIES := \
 # Default target
 ALL_TARGET := help
 
-TAR_EXCLUDE_MAC_METADATA := $(if $(IS_MAC),--no-mac-metadata,)
-
-.PHONY: package pack p tarball tar tb
-package pack p tarball tar tb: ## package this as a source tarball for installation elsewhere
-	tar cz --no-xattrs $(TAR_EXCLUDE_MAC_METADATA) --exclude-vcs -C .. --exclude $(APP).tgz -f $(APP).tgz $(APP)
-
 .PHONY: pack-and-copy
-pack-and-copy pac pc: pack ## package, copy to zds-ai project
-	cp $(APP).tgz ~/sca/zds-ai
+pack-and-copy pac pc: tarball ## package source, copy to zds-ai project
+	cp $(APP)-source.tgz ~/sca/zds-ai/$(APP).tgz
+
+.PHONY: prigc
+prigc: pac prig ## build, reinstall globally, pack, and copy
+	@:

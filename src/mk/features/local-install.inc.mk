@@ -63,7 +63,7 @@ define show-install-entry
 			dest_path="$(DEST_DIR)/$$filename"; \
 			echo "  Would install $$file to $$dest_path with permissions $(PERMISSIONS)"; \
 		else \
-			echo "- Warning: Source file $$file not found"; \
+			echo - Warning: Source file $$file not found; \
 		fi; \
 	done
 endef
@@ -71,28 +71,28 @@ endef
 # Main installation target
 .PHONY: local-install
 local-install: ## Install files to local filesystem according to LOCAL_INSTALL_ENTRIES
-	@echo "Installing files to local filesystem..."
+	@echo Installing files to local filesystem...
 ifeq ($(LOCAL_INSTALL_ENTRIES),)
-	@echo "No installation entries defined. Define LOCAL_INSTALL_ENTRIES in your Makefile."
-	@echo "Format: source_pattern:destination_directory:permissions"
+	@echo No installation entries defined.  Define LOCAL_INSTALL_ENTRIES in your $(APP).inc.mk.
+	@echo Format: source_pattern:destination_directory:permissions
 	@echo "Example: LOCAL_INSTALL_ENTRIES := src/bin/*:/usr/local/bin:0755"
 else
 	@$(foreach entry,$(LOCAL_INSTALL_ENTRIES),$(call process-install-entry,$(entry));)
 endif
-	@echo "Local installation complete."
+	@echo Local installation complete.
 
 # Generic install target that delegates to local-install
-# This makes 'make install' work when local-install feature is included
+# This makes 'mzke install' work when local-install feature is included
 .PHONY: install
-install: local-install ## Install files to local filesystem (delegates to local-install)
+install: local-install build ## Build then install files to local filesystem (delegates to local-install)
 
 # Dry-run target to preview installations
 .PHONY: local-install-dry-run
 local-install-dry-run: ## Show what files would be installed without installing them
-	@echo "Dry run - would install the following files:"
+	@echo Dry run would install the following files:
 ifeq ($(LOCAL_INSTALL_ENTRIES),)
-	@echo "No installation entries defined. Define LOCAL_INSTALL_ENTRIES in your Makefile."
+	@echo No installation entries defined.  Define LOCAL_INSTALL_ENTRIES in your $(APP).inc.mk.
 else
 	@$(foreach entry,$(LOCAL_INSTALL_ENTRIES),$(call show-install-entry,$(entry));)
 endif
-	@echo "Dry run complete."
+	@echo Dry run complete.
