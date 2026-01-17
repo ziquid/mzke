@@ -16,8 +16,8 @@ ifneq ($(BUILD_ARGS),)
   BUILD_ARGS_FLAGS = $(foreach arg,$(BUILD_ARGS),--build-arg $(arg) )
 endif
 
-.PHONY: build-image bi
-build-image bi: $(IMAGE_BUILD_DEPS) $(DOCKERFILE) ddr ## Build and Push All container image(s) built by this app
+.PHONY: build-container-image bci
+build-container-image bci: $(IMAGE_BUILD_DEPS) $(DOCKERFILE) ddr ## Build and Push All container image(s) built by this app
 ifeq ($(IS_PROD),Y)
 	$(eval IMAGE_BUILD_PUSH := --push)
 	$(eval IMAGE_BUILD_PLATFORMS := --platform linux/amd64,linux/arm64)
