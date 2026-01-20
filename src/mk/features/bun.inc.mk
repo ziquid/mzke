@@ -34,6 +34,10 @@ npm-login: ## Login to NPM registry (uses npm login)
 package pack p: build ## Create the $(BUN_PACKAGE_TARBALL) package.  Implies build.
 	bun pm pack $($@_ARGS)
 
+.PHONY: pack-quiet pq
+pack-quiet pq: build ## Create the $(BUN_PACKAGE_TARBALL) package quietly.  Implies build.
+	bun pm pack --quiet $($@_ARGS)
+
 .PHONY: package-install-global pig
 package-install-global pig: package ## Install the $(BUN_PACKAGE_NAME_VERSION) package globally.  Implies package.
 	bun install -g "$(shell pwd -P)/$(BUN_PACKAGE_TARBALL)"
@@ -41,6 +45,12 @@ package-install-global pig: package ## Install the $(BUN_PACKAGE_NAME_VERSION) p
 .PHONY: package-remove-global prg
 package-remove-global prg: ## Remove all globally-installed $(BUN_PACKAGE_NAME_STRIPPED) packages.
 	bun remove -g "$(BUN_PACKAGE_NAME)"
+
+.PHONY: pqrig
+pqrig: ## Pack quietly, then remove all globally-installed $(BUN_PACKAGE_NAME_STRIPPED) packages, then install $(BUN_PACKAGE_NAME_VERSION).
+	bun pm pack --quiet $($@_ARGS)
+	bun remove -g "$(BUN_PACKAGE_NAME)"
+	bun install -g "$(shell pwd -P)/$(BUN_PACKAGE_TARBALL)"
 
 .PHONY: prig
 prig: ## Remove all globally-installed $(BUN_PACKAGE_NAME_STRIPPED) packages, then install $(BUN_PACKAGE_NAME_VERSION).
