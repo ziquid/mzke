@@ -24,7 +24,7 @@ ALL_TARGET := help
 
 .PHONY: copy
 copy: tarball ## package source, copy to zds-ai project
-	cp $(APP)-source.tgz ~/sca/zds-ai/$(APP).tgz
+	cp $(APP)-source.tgz ~/scm/zds-ai/$(APP).tgz
 
 .PHONY: pack-and-copy
 pack-and-copy pac pc: pack copy ## package, copy to $(BUN_PACKAGE_NAME_STRIPPED).tgz and zds-ai project
