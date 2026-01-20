@@ -23,7 +23,7 @@ LOCAL_INSTALL_ENTRIES := \
 ALL_TARGET := help
 
 .PHONY: copy
-copy: tarball ## package source, copy to zds-ai project
+copy: ## package source, copy to zds-ai project
 	cp $(APP)-source.tgz ~/scm/zds-ai/$(APP).tgz
 
 .PHONY: pack-and-copy
