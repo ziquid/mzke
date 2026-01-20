@@ -42,3 +42,7 @@ debug2 = $(if $(shell [ $(DEBUG) -ge 2 ] && echo y),$(info $(1)))
 debug3 = $(if $(shell [ $(DEBUG) -ge 3 ] && echo y),$(info $(1)))
 
 $(foreach var,$(MAKEVARS),$(call debug3,"$(var) = $($(var))"))
+
+# Text bolding
+BOLD_TEXT := $(shell tput bold)
+NORMAL_TEXT := $(shell tput sgr0)
