@@ -26,6 +26,10 @@ install i: ## Install bun dependencies
 install-global ig: ## Install a bun package globally
 	bun install -g $($@_ARGS)
 
+.PHONY: npm
+npm-for-real: ## Run an npm command
+	npm $($@_ARGS)
+
 .PHONY: npm-login
 npm-login: ## Login to NPM registry (uses npm login)
 	npm login $($@_ARGS)
