@@ -1,7 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 # mzke -- ZDS make wrapper
 
-MZKE_VERSION=0.1.1-20260116
+MZKE_VERSION=0.1.1-20260210
+MZKE_ROOT=/usr/local/share/mzke
 
 [[ "$1" == --version || "$1" == -v ]] && echo mzke version $MZKE_VERSION && make --version && exit 0
 
@@ -78,9 +80,10 @@ fi
 # Rule 1: if no makefile and target is "prep", use Makefile
 # Makefile.song.common
 
-if [ "$TARGET" == prep -a -z "$MAKEFILE" ]; then
+[[ "$TARGET" == prep && -z "$MAKEFILE" ]] && \
   MAKEFILE=/usr/local/share/muziq/Makefile.song.common
-fi
+
+[[ -z "$MAKEFILE" && -n "$TARGET" && -f "$MZKE_ROOT/templates/Mzkefile.$TARGET.mk" ]] && MAKEFILE="$MZKE_ROOT/templates/Mzkefile.$TARGET.mk"
 
 [[ -z "$MAKEFILE" ]] && echo Fatal error: No M.kefile found >&2 && exit 1
 
