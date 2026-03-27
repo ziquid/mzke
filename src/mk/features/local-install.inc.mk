@@ -33,7 +33,7 @@ define process-install-entry
 
 	@if [ ! -d "$(DEST_DIR)" ]; then \
 		echo "  Creating directory $(DEST_DIR)"; \
-		mkdir -p "$(DEST_DIR)" 2>/dev/null || echo "- Warning: Failed to create directory $(DEST_DIR)"; \
+		mkdir -p "$(DEST_DIR)" || { echo "Error: Failed to create directory $(DEST_DIR)"; exit 1; }; \
 	fi
 
 	@for file in $(SOURCE_PATTERN); do \
@@ -41,10 +41,10 @@ define process-install-entry
 			filename=$$(basename "$$file"); \
 			dest_path="$(DEST_DIR)/$$filename"; \
 			echo "  . $$file"; \
-			cp -fa "$$file" "$$dest_path" 2>/dev/null || echo "- Warning: Failed to copy $$file to $$dest_path"; \
-			chmod "$(PERMISSIONS)" "$$dest_path" 2>/dev/null || echo "- Warning: Failed to set permissions $(PERMISSIONS) on $$dest_path"; \
+			cp -fa "$$file" "$$dest_path" || { echo "Error: Failed to copy $$file to $$dest_path"; exit 1; }; \
+			chmod "$(PERMISSIONS)" "$$dest_path" || { echo "Error: Failed to set permissions $(PERMISSIONS) on $$dest_path"; exit 1; }; \
 		else \
-			echo "- Warning: Source file $$file not found"; \
+			echo "Error: Source file $$file not found"; exit 1; \
 		fi; \
 	done
 endef
