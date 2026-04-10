@@ -1,34 +1,42 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
 # mzke -- ZDS make wrapper
 
-MZKE_VERSION=0.1.1-20260222
+MZKE_VERSION=0.1.1-20260410
 MZKE_ROOT=/usr/local/share/mzke
 
 [[ "$1" == --version || "$1" == -v ]] && echo mzke version $MZKE_VERSION && make --version && exit 0
 
-function _mzke_find_mzkefile() {
+_mzke_find_mzkefile() {
+  local STARTDIR MAKEFILE NUMSLASHES
 
   STARTDIR=$(pwd -P)
-  cd "$STARTDIR"
+  cd "$STARTDIR" || return 1
 
   while true; do
-
     NUMSLASHES=$(pwd -P | tr -d -c / | wc -c)
-    if [ "$NUMSLASHES" -le 2 ]; then
-      break
-    fi
+    [[ "$NUMSLASHES" -le 2 ]] && break
 
-    cd ..
-    if [ -r Mzkefile ]; then
-      MAKEFILE="$(pwd -P)"/Mzkefile
-      break
-    fi
-
+    cd .. || return 1
+    [[ -r Mzkefile ]] && MAKEFILE="$(pwd -P)/Mzkefile" && break
   done
 
-  cd "$STARTDIR"
-  echo $MAKEFILE
+  cd "$STARTDIR" || return 1
+  print -r -- "$MAKEFILE"
+}
+
+_mzke_build_make_cmd() {
+  make_cmd=(make -f "$MAKEFILE")
+  [[ -n "$DIRNAME" ]] && make_cmd+=(-C "$DIRNAME")
+
+  make_cmd+=("${make_opts[@]}")
+  make_cmd+=(
+    IS_MZKE=YES
+    MAKE_USER_COMMAND=mzke
+  )
+
+  [[ -n "$ARGS_VALUE" ]] && make_cmd+=("ARGS=$ARGS_VALUE")
+  make_cmd+=("$TARGET")
 }
 
 # Process -C flag first, before any file searching
@@ -50,32 +58,22 @@ else
   MAKEFILE=$(_mzke_find_mzkefile)
   if [[ -n "$MAKEFILE" ]]; then
     DIRNAME=$(dirname "$MAKEFILE")
-    SUBDIR="-C \"$DIRNAME\""
     MAKEFILE=$(basename "$MAKEFILE")
   fi
 fi
 
 [[ "$1" == --check-m?kefile ]] && exit $([[ -f "$MAKEFILE" ]] ; echo $?)
 
-[[ "$1" == -n ]] && OPTS="$OPTS -n" && shift
-[[ "$1" == -s ]] && OPTS="$OPTS -s" && NO_PRINT_BANNER=1 && shift
+typeset -a make_cmd
+typeset -a make_opts
+
+[[ "$1" == -n ]] && make_opts+=(-n) && shift
+[[ "$1" == -s ]] && make_opts+=(-s) && NO_PRINT_BANNER=1 && shift
 
 TARGET=all
-
 [[ -n "$1" ]] && TARGET="$1" && shift
 
-VARS="IS_MZKE=YES MAKE_USER_COMMAND=mzke"
-ARGS=
-
-if [ $# -gt 0 ]; then
-  # Use printf to properly quote each argument
-  quoted_args=
-  for arg in "$@"; do
-    quoted_args="${quoted_args} $(printf %q "$arg")"
-  done
-  ARGS_QUOTED="ARGS=\"${quoted_args# }\""  # Remove leading space
-  ARGS=ARGS="$@"
-fi
+ARGS_VALUE="$*"
 
 # Rule 1: if no makefile and target is "prep", use Makefile
 # Makefile.song.common
@@ -87,16 +85,19 @@ fi
 
 [[ -z "$MAKEFILE" ]] && echo Fatal error: No M.kefile found >&2 && exit 1
 
+_mzke_build_make_cmd
+
 # Execute make
-[[ "$NO_PRINT_BANNER" == 1 ]] || echo make -f $MAKEFILE $SUBDIR $OPTS $VARS $ARGS_QUOTED $TARGET
-eval make -f \"$MAKEFILE\" $SUBDIR $OPTS $VARS $ARGS_QUOTED $TARGET
+[[ "$NO_PRINT_BANNER" == 1 ]] || print -r -- "${(qq)make_cmd}"
+"${make_cmd[@]}"
 err_num=$?
 
 # non-template make failed but there is a template?  try that.
 if [[ "$USING_TEMPLATE" != Y && "$err_num" -eq 2 && -n "$TARGET" && -f "$MZKE_ROOT/templates/Mzkefile.$TARGET.mk" ]]; then
   MAKEFILE="$MZKE_ROOT/templates/Mzkefile.$TARGET.mk"
-  [[ "$NO_PRINT_BANNER" == 1 ]] || echo make -f $MAKEFILE $SUBDIR $OPTS $VARS $ARGS_QUOTED $TARGET
-  eval make -f \"$MAKEFILE\" $SUBDIR $OPTS $VARS $ARGS_QUOTED $TARGET
+  _mzke_build_make_cmd
+  [[ "$NO_PRINT_BANNER" == 1 ]] || print -r -- "${(qq)make_cmd}"
+  "${make_cmd[@]}"
   err_num=$?
 fi
 

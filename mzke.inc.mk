@@ -18,8 +18,7 @@ LOCAL_INSTALL_ENTRIES := \
     src/Mzkefile.example:/usr/local/share/mzke:0644 \
     src/templates/*.mk:/usr/local/share/mzke/templates:0644 \
     README.md:/usr/local/share/mzke:0644 \
-    src/mk/vendor/gmsl/gmsl:/usr/local/share/mzke/mk/vendor/gmsl:0644 \
-    src/mk/vendor/gmsl/__gmsl:/usr/local/share/mzke/mk/vendor/gmsl:0644
+    src/mk/vendor/gmsl/*:/usr/local/share/mzke/mk/vendor/gmsl:0644
 
 # Default target
 ALL_TARGET := help
