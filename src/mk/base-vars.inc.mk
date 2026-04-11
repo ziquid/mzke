@@ -9,7 +9,10 @@ SPACE := $(subst :,,$(SPACE_QUOTED))
 CURDIR_SPACE_REPLACED := $(subst $(SPACE),$(SPACE_SUBST),$(CURDIR))
 CURDIR_NAME := $(lastword $(subst /, ,$(CURDIR)))
 
-HOST_OS := $(shell uname)
+HOST_OS := $(strip $(shell uname))
+
+IS_MAC   := $(if $(filter Darwin,$(HOST_OS)),Y)
+IS_LINUX := $(if $(filter Linux,$(HOST_OS)),Y)
 
 MAKE_USER_COMMAND ?= $(notdir $(MAKE))
 RUN_MAKE := $(MAKE) -f $(firstword $(MAKEFILE_LIST))
@@ -24,14 +27,6 @@ $(MAKECMDGOALS)_ARGS := $(ARGS)
 GIT_BRANCH := $(shell git branch --show-current)
 PROD_BRANCHES := $(call set_create,main master)
 IS_PROD := $(if $(call set_is_member,$(GIT_BRANCH),$(PROD_BRANCHES)),Y,)
-
-ifeq ($(HOST_OS),Darwin)
-IS_MAC := Y
-endif
-
-ifeq ($(HOST_OS),Linux)
-IS_LINUX := Y
-endif
 
 # Default verbosity
 DEBUG ?= 0
