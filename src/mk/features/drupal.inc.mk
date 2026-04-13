@@ -14,7 +14,7 @@ endif
 
 .PHONY: composer
 composer : run ## Run a composer command (composer-help for help)
-	docker exec -t -i $(APP)-web-1 /bin/bash -c "composer $($@_ARGS)"
+	docker exec -t $(DOCKER_INTERACTIVE) $(APP)-web-1 /bin/bash -c "composer $($@_ARGS)"
 
 .PHONY: composer-help
 composer-help: ## get details about calling composer
@@ -23,13 +23,13 @@ composer-help: ## get details about calling composer
 
 .PHONY: debug-off
 debug-off: run ## Disable PHP debugging in the web container
-	docker exec -t -i $(APP)-web-1 cp /usr/local/etc/php/php.ini{-production,}
+	docker exec -t $(DOCKER_INTERACTIVE) $(APP)-web-1 cp /usr/local/etc/php/php.ini{-production,}
 	$(warning "TODO: Disable xdebug in php.ini")
 	docker container restart $(APP)-web-1
 
 .PHONY: debug-on
 debug-on: run ## Enable PHP debugging in the web container
-	docker exec -t -i $(APP)-web-1 cp /usr/local/etc/php/php.ini{-development,}
+	docker exec -t $(DOCKER_INTERACTIVE) $(APP)-web-1 cp /usr/local/etc/php/php.ini{-development,}
 	$(warning "TODO: Enable xdebug in php.ini")
 	docker container restart $(APP)-web-1
 
@@ -44,7 +44,7 @@ drush-help: ## get details about calling drush
 
 .PHONY: sqlc
 sqlc: run ## Connect to the MySQL container via the mysql CLI
-	docker exec -t -i $(APP)-db-1 mysql -u root -p$(MYSQL_ROOT_PASSWORD) $(APP)
+	docker exec -t $(DOCKER_INTERACTIVE) $(APP)-db-1 mysql -u root -p$(MYSQL_ROOT_PASSWORD) $(APP)
 
 .PHONY: ssh-db
 ssh-db: run ## SSH into the db container
