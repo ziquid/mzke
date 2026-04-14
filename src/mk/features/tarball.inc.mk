@@ -14,7 +14,7 @@ package pack p tarball tar tb: build ## Create the $(TARBALL_NAME)-source.tgz pa
 	  while read a; do \
 	    printf $(APP)/%s'\n' $$a; \
 	  done > $(TMPFILE)
-	tar cz --no-xattrs $(TAR_EXCLUDE_MAC_METADATA) --exclude-vcs -C .. --exclude $(APP)/$(APP)-source.tgz --exclude $(APP)/$(APP).tgz --exclude $(APP)/$(TARBALL_NAME)-source.tgz --exclude $(APP)/$(TARBALL_NAME).tgz -f $(TARBALL_NAME)-source.tgz -T $(TMPFILE)
+	tar cz --no-xattrs $(TAR_EXCLUDE_MAC_METADATA) --exclude-vcs --exclude .gitea -C .. --exclude $(APP)/$(APP)-source.tgz --exclude $(APP)/$(APP).tgz --exclude $(APP)/$(TARBALL_NAME)-source.tgz --exclude $(APP)/$(TARBALL_NAME).tgz -f $(TARBALL_NAME)-source.tgz -T $(TMPFILE)
 	@rm -f $(TMPFILE)
 # 	git archive --format=tar.gz -o $(APP)-source.tgz --prefix $(APP)/ HEAD
 
