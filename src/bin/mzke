@@ -73,7 +73,16 @@ typeset -a make_opts
 TARGET=all
 [[ -n "$1" ]] && TARGET="$1" && shift
 
-ARGS_VALUE="${(j: :)${(qq)@}}"
+# Re-quote args containing spaces so they survive bash -c interpolation
+typeset -a _quoted_args
+for _arg in "$@"; do
+  if [[ "$_arg" == *\ * ]]; then
+    _quoted_args+=("'${_arg//\'/'\\''/}'")
+  else
+    _quoted_args+=("$_arg")
+  fi
+done
+ARGS_VALUE="${_quoted_args[*]}"
 
 # Rule 1: if no makefile and target is "prep", use Makefile
 # Makefile.song.common
