@@ -73,7 +73,7 @@ typeset -a make_opts
 TARGET=all
 [[ -n "$1" ]] && TARGET="$1" && shift
 
-ARGS_VALUE="$*"
+ARGS_VALUE="${(j: :)${(qq)@}}"
 
 # Rule 1: if no makefile and target is "prep", use Makefile
 # Makefile.song.common
