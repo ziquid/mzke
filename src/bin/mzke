@@ -2,7 +2,7 @@
 
 # mzke -- ZDS make wrapper
 
-MZKE_VERSION=0.1.1-20260413
+MZKE_VERSION=0.1.1-20260530
 MZKE_ROOT=/usr/local/share/mzke
 
 [[ "$1" == --version || "$1" == -v ]] && echo mzke version $MZKE_VERSION && make --version && exit 0
@@ -89,6 +89,8 @@ ARGS_VALUE="${_quoted_args[*]}"
 
 [[ "$TARGET" == prep && -z "$MAKEFILE" ]] && \
   MAKEFILE=/usr/local/share/muziq/Makefile.song.common
+
+[[ -n "$MAKEFILE" && "$MAKEFILE" == "$MZKE_ROOT/templates/"* ]] && USING_TEMPLATE=Y
 
 [[ -z "$MAKEFILE" && -n "$TARGET" && -f "$MZKE_ROOT/templates/Mzkefile.$TARGET.mk" ]] && MAKEFILE="$MZKE_ROOT/templates/Mzkefile.$TARGET.mk" && USING_TEMPLATE=Y
 
