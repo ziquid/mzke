@@ -43,8 +43,10 @@ define process-install-entry
 			echo "  . $$file"; \
 			cp -fa "$$file" "$$dest_path" || { echo "Error: Failed to copy $$file to $$dest_path"; exit 1; }; \
 			chmod "$(PERMISSIONS)" "$$dest_path" || { echo "Error: Failed to set permissions $(PERMISSIONS) on $$dest_path"; exit 1; }; \
+		elif [ -d "$$file" ]; then \
+		    echo Warning: Skipping subdir $$file; \
 		else \
-			echo "Error: Source file $$file not found"; exit 1; \
+			echo Error: Source file $$file not found; exit 1; \
 		fi; \
 	done
 endef

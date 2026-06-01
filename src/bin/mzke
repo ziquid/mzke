@@ -2,7 +2,7 @@
 
 # mzke -- ZDS make wrapper
 
-MZKE_VERSION=0.1.1-20260530
+MZKE_VERSION=0.1.1-20260601
 MZKE_ROOT=/usr/local/share/mzke
 
 [[ "$1" == --version || "$1" == -v ]] && echo mzke version $MZKE_VERSION && make --version && exit 0
